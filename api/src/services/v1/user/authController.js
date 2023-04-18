@@ -5,6 +5,7 @@ const {
   generateAccessToken,
   generateRefreshToken,
 } = require("../../../helpers/authTokens");
+const { generateOTP } = require("../../../helpers/otp");
 
 const register = async (req, res) => {
   const {
@@ -71,7 +72,7 @@ const login = async (req, res) => {
     }
 
     // generate otp
-    const otp = "123456";
+    const otp = generateOTP().token;
     // get phone number
     const payload = {
       otp_code: otp,

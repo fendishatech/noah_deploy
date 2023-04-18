@@ -21,3 +21,8 @@ function verifyOTP(secret, token) {
   });
   return verified;
 }
+
+module.exports = {
+  generateOTP,
+  verifyOTP,
+};
