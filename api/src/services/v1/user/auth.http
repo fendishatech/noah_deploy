@@ -1,0 +1,52 @@
+# --------------------------------- REGISTER ------------------------------- #
+
+###
+POST http://localhost:4444/api/v1/users/register HTTP/1.1
+Authorization: Bearer .eyJpZCI6NCwiZmlyc3RfbmFtZSI6IktpZHVzIiwiZmF0aGVyX25hbWUiOiJUYXllIiwibGFzdF9uYW1lIjoiVHNpZ2UiLCJlbWFpbCI6ImtpZHVzM0BnbWFpbC5jb20iLCJwaG9uZV9ubyI6IjA5MTExMjEzMTYiLCJ1c2VyX3JvbGUiOiJ1c2VyIiwiaWF0IjoxNjgwOTM0MjgwLCJleHAiOjE2ODA5MzQzMDB9.kmCi43NQ6MguTeh_I9a8LBjAqK7JMqLOeYF81H_zQHU
+Content-Type: application/json
+
+{
+    "first_name" : "Kidus",
+    "father_name" : "Taye",
+    "last_name" : "Tsige",
+    "email":"kidus2@gmail.com",
+    "phone_no" : "0911121318",
+    "password" : "123456Abc",
+    "confirm_password" : "123456Abc",
+    "avatar" :"uploads/images/users/kidus-3/2/2023.jpg",
+    "user_role" : "admin"
+}
+
+
+# ---------------------------------- LOGIN --------------------------------- #
+# Login as admin
+###
+POST http://localhost:4444/api/v1/users/login HTTP/1.1
+Content-Type: application/json
+
+{
+    "phone_no" : "091112131",
+    "password" : "123456"
+}
+
+# Login as user
+###
+POST http://localhost:4444/api/v1/users/login HTTP/1.1
+Content-Type: application/json
+
+{
+    "email" : "kidus3@gmail.com",
+    "password" : "123456"
+}
+
+
+# ------------------------------ REFRESH TOKEN ----------------------------- #
+# Refresh tokem
+###
+GET http://localhost:4444/api/v1/users/token HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZmlyc3RfbmFtZSI6IktpZHVzIiwiZmF0aGVyX25hbWUiOiJUYXllIiwibGFzdF9uYW1lIjoiVHNpZ2UiLCJlbWFpbCI6ImtpZHVzMkBnbWFpbC5jb20iLCJwaG9uZV9ubyI6IjA5MTExMjEzMTUiLCJ1c2VyX3JvbGUiOiJhZG1pbiIsImlhdCI6MTY4MTAxNDc5NiwiZXhwIjoxNjgxMDE0ODU2fQ.LFvfzE0CvJu_niD4ECR6lJh_v7yUym-RSzB4AwgaEf8
+
+# --------------------------------- LOGOUT --------------------------------- #
+# Logout
+###
+POST http://localhost:4444/api/v1/users/logout HTTP/1.1
