@@ -12,6 +12,19 @@ function generateOTP() {
   return { secret, token, expires };
 }
 
+async function sendOTP(phone_no, OTP_CODE) {
+  const message = {
+    token: process.env.SMS_API_KEY,
+    to: phone_no, // String
+    message: OTP_CODE,
+    template_id: "otp",
+  };
+
+  const response = await axios.post(`${process.env.SMS_SERVER}/send`, message);
+
+  return res.status(200).json(response.data);
+}
+
 function verifyOTP(secret, token) {
   const verified = speakeasy.totp.verify({
     secret: secret.base32,
