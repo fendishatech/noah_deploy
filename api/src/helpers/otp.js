@@ -1,4 +1,5 @@
 const speakeasy = require("speakeasy");
+const axios = require("axios");
 
 function generateOTP() {
   const secret = speakeasy.generateSecret({ length: 20 });
@@ -21,8 +22,9 @@ async function sendOTP(phone_no, OTP_CODE) {
   };
 
   const response = await axios.post(`${process.env.SMS_SERVER}/send`, message);
-
-  return res.status(200).json(response.data);
+  console.log(response);
+  console.log(response.data);
+  return response ? true : false;
 }
 
 function verifyOTP(secret, token) {
@@ -37,5 +39,6 @@ function verifyOTP(secret, token) {
 
 module.exports = {
   generateOTP,
+  sendOTP,
   verifyOTP,
 };

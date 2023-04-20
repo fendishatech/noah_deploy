@@ -11,7 +11,10 @@ const UserAuthContextProvider = ({ children }) => {
 
   const login = async ({ phone_no, password }) => {
     try {
-      // const res = await axiosInstance.post("/login", { phone_no, password });
+      // const res = await axiosInstance.post("/users/login", {
+      //   phone_no,
+      //   password,
+      // });
       const res = await axios.post("http://localhost:4444/api/v1/users/login", {
         phone_no,
         password,

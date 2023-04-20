@@ -23,7 +23,7 @@ const Login = () => {
         password,
       });
       if (res) {
-        alert(res);
+        console.log(res);
         setErrors({});
         navigate("/otp");
       } else {

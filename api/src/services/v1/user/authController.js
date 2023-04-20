@@ -5,7 +5,7 @@ const {
   generateAccessToken,
   generateRefreshToken,
 } = require("../../../helpers/authTokens");
-const { generateOTP } = require("../../../helpers/otp");
+const { generateOTP, sendOTP } = require("../../../helpers/otp");
 
 const register = async (req, res) => {
   const {
@@ -73,16 +73,25 @@ const login = async (req, res) => {
 
     // generate otp
     const otp = generateOTP().token;
+
     // get phone number
     const payload = {
-      otp_code: otp,
+      success: true,
       phone_no: user.phone_no,
     };
 
-    return res.status(200).json({
-      success: true,
-      payload: payload,
-    });
+    // SEND OTP
+    if (sendOTP(user.phone_no, otp)) {
+      return res.status(200).json({
+        success: true,
+        payload: payload,
+      });
+    } else {
+      return res.status(200).json({
+        success: false,
+        message: "There was an error sending short code!",
+      });
+    }
   } catch (error) {
     return res.status(404).json({
       success: false,
