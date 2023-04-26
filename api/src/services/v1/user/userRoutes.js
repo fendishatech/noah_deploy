@@ -15,7 +15,7 @@ router.post(
 );
 router.post("/users/login", authController.login);
 // router.post("/users/login", limiter, authController.login);
-router.get("/users/otp", authController.verifyOTP);
+router.post("/users/otp", authController.otp);
 router.get("/users/token", authController.refreshAccessToken);
 router.post("/users/logout", authController.logout);
 

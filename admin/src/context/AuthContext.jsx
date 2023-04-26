@@ -19,6 +19,7 @@ const UserAuthContextProvider = ({ children }) => {
         phone_no,
         password,
       });
+      // set current user in local storage
       return res.data;
     } catch (error) {
       return false;

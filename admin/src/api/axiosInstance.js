@@ -12,21 +12,21 @@ const axiosInstance = axios.create({
 });
 
 const getAccessToken = () => {
-  return (
-    document.cookie
-      .split(";")
-      .find((row) => row.startsWith(`\${ACCESS_TOKEN_COOKIE_NAME}=`))
-      ?.split("=")[1] || null
-  );
+  return document.cookie.accessToken
+    ? document.cookie
+        .split(";")
+        .find((row) => row.startsWith(`\${ACCESS_TOKEN_COOKIE_NAME}=`))
+        ?.split("=")[1]
+    : null;
 };
 
 const getRefreshToken = () => {
-  return (
-    document.cookie
-      .split(";")
-      .find((row) => row.startsWith(`\${REFRESH_TOKEN_COOKIE_NAME}=`))
-      ?.split("=")[1] || null
-  );
+  return document.cookie.refreshToken
+    ? document.cookie
+        .split(";")
+        .find((row) => row.startsWith(`\${REFRESH_TOKEN_COOKIE_NAME}=`))
+        ?.split("=")[1]
+    : null;
 };
 
 const isAccessTokenExpired = (accessToken) => {
@@ -64,11 +64,11 @@ axiosInstance.interceptors.request.use(
             // Handle error
             console.error(response.data.message);
             // Redirect user to login page
-            window.location.href = "/login";
+            window.location.href = "/";
           }
         } else {
           // Redirect user to login page
-          window.location.href = "/login";
+          window.location.href = "/";
         }
       }
 
@@ -76,7 +76,7 @@ axiosInstance.interceptors.request.use(
     } catch (error) {
       console.log(error);
       // Redirect user to login page
-      window.location.href = "/login";
+      window.location.href = "/";
     }
   },
   (error) => {

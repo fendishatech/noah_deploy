@@ -17,15 +17,15 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      toast.success("Wow so easy!");
       const res = await login({
         phone_no: phoneNumber,
         password,
       });
       if (res) {
-        console.log(res);
+        toast.success("Wow so easy!");
+        console.log(res.payload);
         setErrors({});
-        navigate("/otp");
+        navigate(`/otp/${res.payload.phone_no}`);
       } else {
         alert("There was an error logging in to system");
       }

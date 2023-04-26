@@ -1,11 +1,12 @@
 const User = require("../models/userModel");
-const bcrypt = require("bcrypt");
+const { authenticator } = require("otplib");
+const { sendOTP } = require("../../../helpers/otp");
 const jwt = require("jsonwebtoken");
 const {
   generateAccessToken,
   generateRefreshToken,
 } = require("../../../helpers/authTokens");
-const { generateOTP, sendOTP } = require("../../../helpers/otp");
+const bcrypt = require("bcrypt");
 
 const register = async (req, res) => {
   const {
@@ -71,20 +72,26 @@ const login = async (req, res) => {
       });
     }
 
-    // generate otp
-    const otp = generateOTP().token;
+    // generate secret and otp
+    const secret = authenticator.generateSecret();
+    const otp_code = authenticator.generate(secret);
 
-    // get phone number
-    const payload = {
-      success: true,
-      phone_no: user.phone_no,
-    };
+    //  store otp secret
+    res.cookie("otp_secret", secret, {
+      httpOnly: true,
+      // maxAge: 2 * 60 * 1000,
+      // secure : true
+    });
 
-    // SEND OTP
-    if (sendOTP(user.phone_no, otp)) {
+    // send otp to user
+    if (true) {
+      // if (sendOTP("0913974307", otp_code)) {
+      // if (sendOTP(user.phone_no, otp_code)) {
       return res.status(200).json({
         success: true,
-        payload: payload,
+        payload: {
+          phone_no: user.phone_no,
+        },
       });
     } else {
       return res.status(200).json({
@@ -100,27 +107,28 @@ const login = async (req, res) => {
   }
 };
 
-const verifyOTP = () => {
-  const otp = generateOTP();
+const otp = async (req, res) => {
+  const otp_code = req.body.otp_code;
+  const secret = req.cookies.otp_secret;
 
-  // send OTP code to user via SMS or email
+  console.log({ secret });
+  if (otp_code && secret) {
+    const isValid = authenticator.verify({ token: otp_code, secret: secret });
 
-  // prompt user to enter OTP code
-
-  const verified = verifyOTP(otp.secret, req.body.otp);
-
-  if (!verified) {
-    return res.status(400).json({
+    if (isValid) {
+      return res.json({ verified: true, success: "Is that you baby" });
+    } else {
+      return res.json({ verified: false });
+    }
+  } else {
+    return res.json({
       success: false,
-      message: "OTP code is invalid or has expired.",
+      message: "There was a problem verifying the OTP Code",
     });
   }
-
-  // generate access and refresh tokens
 };
 
 const refreshAccessToken = async (req, res) => {
-  console.log(req.cookies);
   try {
     // GET REFRESH TOKEN
     const refreshToken = req.cookies.refreshToken;
@@ -216,7 +224,7 @@ const logout = async (req, res) => {
 module.exports = {
   register,
   login,
-  verifyOTP,
+  otp,
   refreshAccessToken,
   logout,
 };

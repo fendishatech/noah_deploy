@@ -23,6 +23,8 @@ app.use(cookieParser());
 // API ROUTES
 app.use("/api/", routes);
 
+app.use(cookieParser());
+
 // DOC ROUTES
 // app.use("/api-docs", swaggerUi.serve, swaggerMiddleware);
 

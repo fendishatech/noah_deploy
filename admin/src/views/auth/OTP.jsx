@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import InputField from "./components/InputField";
 
@@ -8,47 +8,48 @@ const OTP = () => {
   const [errors, setErrors] = useState({});
   const [success, setSuccess] = useState("");
 
+  const { phone_no } = useParams();
+
   const navigate = useNavigate();
 
   const handleVerify = async (e) => {
     e.preventDefault();
     try {
-      console.log("I am here");
-      // if (Object.keys(errors).length === 0) {
-      console.log("OTP is valid");
-      // Make API call to verify OTP
-      // const response = await axios.post("/api/login", {
-      //   phoneNumber,
-      //   password,
-      // });
-      setSuccess("Login successful!");
-      setErrors({});
-      navigate("/home");
-      // } else {
-      //   console.log("OTP is invalid");
-      // }
+      const response = await axios.post(
+        "http://localhost:4444/api/v1/users/otp",
+        {
+          otp_code: otpCode,
+        }
+      );
+      if (response.success == true) {
+        setSuccess("Login successful!");
+        setErrors({});
+        navigate("/home");
+      } else {
+        console.log("OTP is invalid");
+      }
     } catch (error) {
-      setErrors(error.response.data);
+      console.log(error.response);
       setSuccess("");
     }
   };
 
   const handleOtpCodeChange = (e) => {
     const value = Number(e.target.value);
-    const regex = /^\d+$/;
-    const newErrors = { ...errors };
-    let newSuccess = "";
-    if (value === "") {
-      newErrors.otp = "OTP cannot be empty";
-    } else if (!regex.test(value)) {
-      newErrors.otp = "OTP must be a number";
-    } else if (value.length !== 6) {
-      newErrors.otp = "OTP must be 6 digits";
-    } else {
-      delete newErrors.otp;
-    }
-    setErrors(newErrors);
-    setSuccess(newSuccess);
+    // const regex = /^\d+$/;
+    // const newErrors = { ...errors };
+    // let newSuccess = "";
+    // if (value === "") {
+    //   newErrors.otp = "OTP cannot be empty";
+    // } else if (!regex.test(value)) {
+    //   newErrors.otp = "OTP must be a number";
+    // } else if (value.length !== 6) {
+    //   newErrors.otp = "OTP must be 6 digits";
+    // } else {
+    //   delete newErrors.otp;
+    // }
+    // setErrors(newErrors);
+    // setSuccess(newSuccess);
     setOtpCode(value);
   };
   return (
@@ -57,14 +58,25 @@ const OTP = () => {
         <h2 className="text-2xl font-bold text-yellow-500 mb-4">
           Verify Short Code
         </h2>
+        <p>
+          we sent a short code to your phone number <b>{phone_no}</b>
+        </p>
         <form onSubmit={handleVerify}>
+          {/* <input
+            type="text"
+            pattern="[0-9]*"
+            value={otpCode}
+            onChange={(e) => setOtpCode(e.target.value)}
+          /> */}
           <InputField
             label="Short code"
-            type="text"
+            type="tel"
+            pattern="[0-9]*"
             value={otpCode}
-            onChange={handleOtpCodeChange}
+            onChange={(e) => setOtpCode(e.target.value)}
             errors={errors.otpCode}
             success={success}
+            autoFocus
             placeholder="Enter your short code"
           />
 

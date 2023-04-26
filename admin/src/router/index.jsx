@@ -7,7 +7,7 @@ const router = createBrowserRouter([
     element: <Login />,
   },
   {
-    path: "/otp",
+    path: "/otp/:phone_no",
     element: <OTP />,
   },
   {
