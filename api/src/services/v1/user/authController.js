@@ -138,7 +138,7 @@ const otp = async (req, res) => {
         message: USER_NOT_FOUND_MESSAGE,
       });
     }
-    console.log();
+
     if (otp_code && secret) {
       const isValid = authenticator.verify({ token: otp_code, secret: secret });
 
@@ -267,6 +267,7 @@ const logout = async (req, res) => {
 
     await updateUser(user.id, { refresh_token: null });
 
+    res.clearCookie(ACCESS_TOKEN_COOKIE_NAME);
     res.clearCookie(REFRESH_TOKEN_COOKIE_NAME);
 
     return res.status(200).json({
