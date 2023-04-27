@@ -8,6 +8,18 @@ const {
 } = require("../../../helpers/authTokens");
 const bcrypt = require("bcrypt");
 
+const ACCESS_TOKEN_COOKIE_NAME = "accessToken";
+const REFRESH_TOKEN_COOKIE_NAME = "refreshToken";
+const OTP_SECRET_COOKIE_NAME = "otp_secret";
+const OTP_ERROR_MESSAGE = "There was a problem verifying the OTP Code";
+const USER_NOT_FOUND_MESSAGE = "User could not be found";
+const SHORT_CODE_ERROR_MESSAGE = "There was an error sending short code!";
+const UNAUTHORIZED_MESSAGE = "Unauthorized";
+const NO_USER_MESSAGE = "There is no user";
+const LOGOUT_MESSAGE = "User logged out";
+// TEMPORARY
+let OTP_VERIFICATION_SECRET = "";
+
 const register = async (req, res) => {
   const {
     first_name,
@@ -76,17 +88,13 @@ const login = async (req, res) => {
     const secret = authenticator.generateSecret();
     const otp_code = authenticator.generate(secret);
 
-    res.cookie("otp_secret", secret, {
-      // httpOnly: true,
+    res.cookie(OTP_SECRET_COOKIE_NAME, secret, {
+      httpOnly: true,
     });
-
-    req.session.otp_secret = secret;
-    console.log("Cookie must be set!");
-
-    // send otp to user
-    console.log(user.phone_no, otp_code, secret);
+    OTP_VERIFICATION_SECRET = secret;
     if (true) {
       // if (sendOTP(user.phone_no, otp_code)) {
+      console.log(`Secret ${secret}, otp_code : ${otp_code}`);
       return res.status(200).json({
         success: true,
         payload: {
@@ -96,7 +104,7 @@ const login = async (req, res) => {
     } else {
       return res.status(200).json({
         success: false,
-        message: "There was an error sending short code!",
+        message: SHORT_CODE_ERROR_MESSAGE,
       });
     }
   } catch (error) {
@@ -110,27 +118,31 @@ const login = async (req, res) => {
 const otp = async (req, res) => {
   const otp_code = req.body.otp_code;
   const phone_no = req.body.phone_no;
-  const secret = req.cookies.otp_secret;
+  const secret =
+    req.cookies[OTP_SECRET_COOKIE_NAME] != undefined
+      ? req.cookies[OTP_SECRET_COOKIE_NAME]
+      : OTP_VERIFICATION_SECRET;
 
-  const session_secret = req.session.otp_secret;
+  console.log(`Secret ${secret}, otp_code : ${otp_code}`);
 
-  console.log(`Otp secret set to session : ${session_secret}`);
-  console.log(`Otp secret set to cookie : ${secret}`);
-  // check if phone no is valid
-  const user = await User.findOne({
-    where: {
-      phone_no: phone_no,
-    },
-  });
+  try {
+    const user = await User.findOne({
+      where: {
+        phone_no: phone_no,
+      },
+    });
 
-  if (user) {
-    // if (otp_code) {
+    if (!user) {
+      return res.json({
+        success: false,
+        message: USER_NOT_FOUND_MESSAGE,
+      });
+    }
+    console.log();
     if (otp_code && secret) {
       const isValid = authenticator.verify({ token: otp_code, secret: secret });
-      // const isValid = true;
 
       if (isValid) {
-        // user payload, generate tokens, store, set cookies
         const userPayload = {
           id: user.id,
           first_name: user.first_name,
@@ -142,7 +154,6 @@ const otp = async (req, res) => {
         };
 
         const accessToken = generateAccessToken(userPayload);
-
         const refreshToken = generateRefreshToken(userPayload);
 
         await User.update(
@@ -154,27 +165,28 @@ const otp = async (req, res) => {
           }
         );
 
-        res.cookie("accessToken", accessToken, {
+        res.cookie(ACCESS_TOKEN_COOKIE_NAME, accessToken, {
           httpOnly: true,
         });
 
-        res.cookie("refreshToken", refreshToken, {
+        res.cookie(REFRESH_TOKEN_COOKIE_NAME, refreshToken, {
           httpOnly: true,
         });
+
         return res.json({ verified: true, success: true });
       } else {
-        return res.json({ success: true, verified: false });
+        return res.json({ success: false, verified: false });
       }
     } else {
       return res.json({
         success: false,
-        message: "There was a problem verifying the OTP Code",
+        message: OTP_ERROR_MESSAGE,
       });
     }
-  } else {
-    return res.json({
+  } catch (error) {
+    return res.status(404).json({
       success: false,
-      message: "User could not be found",
+      message: error.message,
     });
   }
 };
@@ -233,43 +245,47 @@ const refreshAccessToken = async (req, res) => {
 
 const logout = async (req, res) => {
   try {
-    const refreshToken = req.cookies.refreshToken;
-    if (!refreshToken)
-      return res.status(204).json({
-        message: "Unauthorized",
+    const refreshToken = req.cookies[REFRESH_TOKEN_COOKIE_NAME];
+
+    if (!refreshToken) {
+      return res.status(401).json({
+        message: UNAUTHORIZED_MESSAGE,
       });
-    const user = await User.findAll({
+    }
+
+    const user = await User.findOne({
       where: {
         refresh_token: refreshToken,
       },
     });
-    if (!user[0]) {
-      return res.status(204).json({
-        error: "there is no user",
+
+    if (!user) {
+      return res.status(404).json({
+        error: NO_USER_MESSAGE,
       });
     }
 
-    const userId = user[0].id;
-    await User.update(
-      {
-        refresh_token: null,
-      },
-      {
-        where: {
-          id: userId,
-        },
-      }
-    );
-    res.clearCookie("refreshToken");
+    await updateUser(user.id, { refresh_token: null });
+
+    res.clearCookie(REFRESH_TOKEN_COOKIE_NAME);
+
     return res.status(200).json({
-      message: "User logged out",
+      message: LOGOUT_MESSAGE,
     });
   } catch (error) {
-    res.json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
   }
+};
+
+const updateUser = async (userId, data) => {
+  await User.update(data, {
+    where: {
+      id: userId,
+    },
+  });
 };
 
 module.exports = {

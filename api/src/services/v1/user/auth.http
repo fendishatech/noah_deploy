@@ -20,7 +20,7 @@ POST http://localhost:4444/api/v1/users/otp HTTP/1.1
 Content-Type: application/json
 
 {
-    "otp_code" : "577314",
+    "otp_code" : "248728",
     "phone_no" : "0913974307"
 }
 

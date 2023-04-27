@@ -16,29 +16,33 @@ const UserAuthContextProvider = ({ children }) => {
           phone_no,
           password,
         });
+        console.log("At auth context");
+        console.log({ res });
+        return res;
       } catch (error) {
         console.log(error.message);
       }
-      const res = await axios.post(
-        "http://localhost:4444/api/v1/users/login",
-        {
-          phone_no,
-          password,
-        },
-        {
-          credentials: "include",
-        }
-      );
-      // set current user in local storage
-      return res.data;
     } catch (error) {
       return false;
     }
   };
 
+  const logout = async () => {
+    try {
+      const res = await axiosInstance.post("/users/logout", {
+        phone_no,
+        password,
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   // provider returns
   return (
-    <UserAuthContext.Provider value={{ currentUser, setCurrentUser, login }}>
+    <UserAuthContext.Provider
+      value={{ currentUser, setCurrentUser, login, logout }}
+    >
       {children}
     </UserAuthContext.Provider>
   );

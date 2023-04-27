@@ -20,12 +20,11 @@ const Login = () => {
         phone_no: phoneNumber,
         password,
       });
-      console.log("Refreshing ?");
-      console.log({ res });
-      if (res.success == true) {
-        console.log(res.payload);
+      console.log("At Login");
+      console.log(res);
+      if (res.data.success == true) {
         setErrors({});
-        navigate(`/otp/`, { state: { phoneNo: res.payload.phone_no } });
+        navigate(`/otp/`, { state: { phoneNo: res.data.payload.phone_no } });
       } else {
         alert("There was an error logging in to system");
       }

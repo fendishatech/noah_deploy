@@ -1,7 +1,6 @@
 require("dotenv").config();
 const express = require("express");
 const cookieParser = require("cookie-parser");
-const session = require("express-session");
 const helmet = require("helmet");
 const cors = require("cors");
 // const csrf = require("csurf");
@@ -14,14 +13,6 @@ const migrate_tables = require("./src/helpers/db_sync_models");
 const app = express();
 
 // MIDDLEWAREs
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: true },
-  })
-);
 app.use(cookieParser());
 app.use(helmet());
 app.use(
@@ -56,4 +47,4 @@ app.listen(process.env.PORT, () => {
 /* -------------------------------------------------------------------------- */
 
 // MIGRATIONS
-migrate_tables();
+// migrate_tables();
