@@ -1,12 +1,16 @@
 import { useState, useRef, useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaBars, FaBell } from "react-icons/fa";
 import { SidebarContext } from "../../../context/sidebarContext";
+import { UserAuthContext } from "../../../context/AuthContext";
 
 const Navbar = () => {
   const [toggleProfile, setToggleProfile] = useState(false);
 
+  const navigate = useNavigate();
+
   const { sidebarToggle, setSidebarToggle } = useContext(SidebarContext);
+  const { logout } = useContext(UserAuthContext);
 
   const handleSidebarToggle = () => setSidebarToggle(!sidebarToggle);
 
@@ -16,6 +20,11 @@ const Navbar = () => {
 
   const handleMouseLeave = () => {
     setToggleProfile(false);
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate("/");
   };
 
   return (
@@ -65,12 +74,12 @@ const Navbar = () => {
                 >
                   Settings
                 </Link>
-                <Link
-                  to="/logout"
-                  className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+                <button
+                  onClick={handleLogout}
+                  className="block w-full text-start px-4 py-2 text-gray-800 hover:bg-gray-200"
                 >
                   Logout
-                </Link>
+                </button>
               </div>
             </div>
           )}

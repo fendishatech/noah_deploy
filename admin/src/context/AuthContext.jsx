@@ -16,8 +16,6 @@ const UserAuthContextProvider = ({ children }) => {
           phone_no,
           password,
         });
-        console.log("At auth context");
-        console.log({ res });
         return res;
       } catch (error) {
         console.log(error.message);
@@ -29,10 +27,7 @@ const UserAuthContextProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      const res = await axiosInstance.post("/users/logout", {
-        phone_no,
-        password,
-      });
+      const res = await axiosInstance.post("/users/logout");
     } catch (error) {
       console.log(error.message);
     }

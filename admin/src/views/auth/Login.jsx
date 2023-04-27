@@ -20,8 +20,6 @@ const Login = () => {
         phone_no: phoneNumber,
         password,
       });
-      console.log("At Login");
-      console.log(res);
       if (res.data.success == true) {
         setErrors({});
         navigate(`/otp/`, { state: { phoneNo: res.data.payload.phone_no } });
