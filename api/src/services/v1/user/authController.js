@@ -78,14 +78,14 @@ const login = async (req, res) => {
 
     //  store otp secret
     res.cookie("otp_secret", secret, {
-      httpOnly: true,
-      // maxAge: 2 * 60 * 1000,
+      // httpOnly: true,
+      maxAge: 2 * 60 * 1000,
       // secure : true
     });
 
     // send otp to user
+    console.log(user.phone_no, otp_code, secret);
     if (true) {
-      // if (sendOTP("0913974307", otp_code)) {
       // if (sendOTP(user.phone_no, otp_code)) {
       return res.status(200).json({
         success: true,
@@ -109,21 +109,68 @@ const login = async (req, res) => {
 
 const otp = async (req, res) => {
   const otp_code = req.body.otp_code;
+  const phone_no = req.body.phone_no;
   const secret = req.cookies.otp_secret;
 
-  console.log({ secret });
-  if (otp_code && secret) {
-    const isValid = authenticator.verify({ token: otp_code, secret: secret });
+  // check if phone no is valid
+  const user = await User.findOne({
+    where: {
+      phone_no: phone_no,
+    },
+  });
 
-    if (isValid) {
-      return res.json({ verified: true, success: "Is that you baby" });
+  if (user) {
+    if (otp_code) {
+      // if (otp_code && secret) {
+      // const isValid = authenticator.verify({ token: otp_code, secret: secret });
+      const isValid = true;
+
+      if (isValid) {
+        // user payload, generate tokens, store, set cookies
+        const userPayload = {
+          id: user.id,
+          first_name: user.first_name,
+          father_name: user.father_name,
+          last_name: user.last_name,
+          email: user.email,
+          phone_no: user.phone_no,
+          user_role: user.user_role,
+        };
+
+        const accessToken = generateAccessToken(userPayload);
+
+        const refreshToken = generateRefreshToken(userPayload);
+
+        await User.update(
+          {
+            refresh_token: refreshToken,
+          },
+          {
+            where: { id: user.id },
+          }
+        );
+
+        res.cookie("accessToken", accessToken, {
+          httpOnly: true,
+        });
+
+        res.cookie("refreshToken", refreshToken, {
+          httpOnly: true,
+        });
+        return res.json({ verified: true, success: true });
+      } else {
+        return res.json({ success: true, verified: false });
+      }
     } else {
-      return res.json({ verified: false });
+      return res.json({
+        success: false,
+        message: "There was a problem verifying the OTP Code",
+      });
     }
   } else {
     return res.json({
       success: false,
-      message: "There was a problem verifying the OTP Code",
+      message: "User could not be found",
     });
   }
 };
@@ -228,35 +275,3 @@ module.exports = {
   refreshAccessToken,
   logout,
 };
-
-// user payload, generate tokens, store, set cookies
-// const userPayload = {
-//   id: user.id,
-//   first_name: user.first_name,
-//   father_name: user.father_name,
-//   last_name: user.last_name,
-//   email: user.email,
-//   phone_no: user.phone_no,
-//   user_role: user.user_role,
-// };
-
-// const accessToken = generateAccessToken(userPayload);
-
-// const refreshToken = generateRefreshToken(userPayload);
-
-// await User.update(
-//   {
-//     refresh_token: refreshToken,
-//   },
-//   {
-//     where: { id: user.id },
-//   }
-// );
-
-// res.cookie("accessToken", accessToken, {
-//   httpOnly: true,
-// });
-
-// res.cookie("refreshToken", refreshToken, {
-//   httpOnly: true,
-// });

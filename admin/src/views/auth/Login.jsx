@@ -1,6 +1,5 @@
 import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 import { UserAuthContext } from "../../context/AuthContext";
 import InputField from "./components/InputField";
 
@@ -21,11 +20,9 @@ const Login = () => {
         phone_no: phoneNumber,
         password,
       });
-      if (res) {
-        toast.success("Wow so easy!");
-        console.log(res.payload);
+      if (res.success == true) {
         setErrors({});
-        navigate(`/otp/${res.payload.phone_no}`);
+        navigate(`/otp/`, { state: { phoneNo: res.payload.phone_no } });
       } else {
         alert("There was an error logging in to system");
       }
