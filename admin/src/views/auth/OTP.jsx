@@ -3,6 +3,7 @@ import { redirect, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import InputField from "./components/InputField";
+import axiosInstance from "../../api/axiosInstance";
 
 const OTP = () => {
   const [phoneNo, setPhoneNo] = useState("");
@@ -17,10 +18,14 @@ const OTP = () => {
   const handleVerify = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:4444/api/v1/users/otp", {
+      const res = await axiosInstance.post("/users/otp", {
         otp_code: otpCode,
         phone_no: phoneNo,
       });
+      // const res = await axios.post("http://localhost:4444/api/v1/users/otp", {
+      //   otp_code: otpCode,
+      //   phone_no: phoneNo,
+      // });
       if (res.data.success == true) {
         console.log(res.data);
         toast.success("Login successful!");

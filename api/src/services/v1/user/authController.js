@@ -77,13 +77,11 @@ const login = async (req, res) => {
     const otp_code = authenticator.generate(secret);
 
     res.cookie("otp_secret", secret, {
-      httpOnly: true,
+      // httpOnly: true,
     });
 
     req.session.otp_secret = secret;
     console.log("Cookie must be set!");
-
-    res.setHeader("Access-Control-Allow-Credentials", "true");
 
     // send otp to user
     console.log(user.phone_no, otp_code, secret);

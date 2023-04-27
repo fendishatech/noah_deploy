@@ -1,33 +1,28 @@
 import axios from "axios";
-// import jwt from "jsonwebtoken";
+import jwt_decode from "jwt-decode";
+import Cookies from "js-cookie";
 
 const ACCESS_TOKEN_COOKIE_NAME = "accessToken";
 const REFRESH_TOKEN_COOKIE_NAME = "refreshToken";
+const BASE_URL = "http://localhost:4444/api/v1";
+const CONTENT_TYPE = "application/json";
+
+// Set the base URL for all Axios requests
+axios.defaults.baseURL = BASE_URL;
 
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:4444/api/v1",
   headers: {
-    "Content-Type": "application/json",
+    "Content-Type": CONTENT_TYPE,
   },
   credentials: "include",
 });
 
 const getAccessToken = () => {
-  return document.cookie.accessToken
-    ? document.cookie
-        .split(";")
-        .find((row) => row.startsWith(`\${ACCESS_TOKEN_COOKIE_NAME}=`))
-        ?.split("=")[1]
-    : null;
+  return Cookies.get(ACCESS_TOKEN_COOKIE_NAME);
 };
 
 const getRefreshToken = () => {
-  return document.cookie.refreshToken
-    ? document.cookie
-        .split(";")
-        .find((row) => row.startsWith(`\${REFRESH_TOKEN_COOKIE_NAME}=`))
-        ?.split("=")[1]
-    : null;
+  return Cookies.get(REFRESH_TOKEN_COOKIE_NAME);
 };
 
 const isAccessTokenExpired = (accessToken) => {
@@ -42,7 +37,7 @@ axiosInstance.interceptors.request.use(
 
       if (accessToken && !isAccessTokenExpired(accessToken)) {
         // Add access token to request headers
-        config.headers.Authorization = `Bearer \${accessToken}`;
+        config.headers.Authorization = `Bearer ${accessToken}`;
       } else {
         // Get refresh token
         const refreshToken = getRefreshToken();
@@ -56,7 +51,7 @@ axiosInstance.interceptors.request.use(
           if (response.data.success) {
             // Add new access token to request headers
             const newAccessToken = response.data.data.accessToken;
-            config.headers.Authorization = `Bearer \${newAccessToken}`;
+            config.headers.Authorization = `Bearer ${newAccessToken}`;
           } else {
             // Handle error
             console.error(response.data.message);
@@ -64,6 +59,7 @@ axiosInstance.interceptors.request.use(
             window.location.href = "/";
           }
         } else {
+          // Handle error
           console.log("No refresh token");
           // Redirect user to login page
           // window.location.href = "/";
@@ -72,6 +68,7 @@ axiosInstance.interceptors.request.use(
 
       return config;
     } catch (error) {
+      // Handle error
       console.log(error);
       // Redirect user to login page
       window.location.href = "/";
