@@ -5,10 +5,11 @@ const ACCESS_TOKEN_COOKIE_NAME = "accessToken";
 const REFRESH_TOKEN_COOKIE_NAME = "refreshToken";
 
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:4444/api/v1/",
+  baseURL: "http://localhost:4444/api/v1",
   headers: {
     "Content-Type": "application/json",
   },
+  credentials: "include",
 });
 
 const getAccessToken = () => {
@@ -37,18 +38,14 @@ const isAccessTokenExpired = (accessToken) => {
 axiosInstance.interceptors.request.use(
   async (config) => {
     try {
-      const accessToken = document.cookie.includes("accessToken")
-        ? getAccessToken()
-        : false;
+      const accessToken = getAccessToken();
 
       if (accessToken && !isAccessTokenExpired(accessToken)) {
         // Add access token to request headers
         config.headers.Authorization = `Bearer \${accessToken}`;
       } else {
         // Get refresh token
-        const refreshToken = document.cookie.includes("refreshToken")
-          ? getRefreshToken()
-          : false;
+        const refreshToken = getRefreshToken();
 
         if (refreshToken) {
           // Request new access token using refresh token
@@ -67,8 +64,9 @@ axiosInstance.interceptors.request.use(
             window.location.href = "/";
           }
         } else {
+          console.log("No refresh token");
           // Redirect user to login page
-          window.location.href = "/";
+          // window.location.href = "/";
         }
       }
 
@@ -85,61 +83,3 @@ axiosInstance.interceptors.request.use(
 );
 
 export default axiosInstance;
-
-// import axios from "axios";
-// import jwt from "jsonwebtoken";
-
-// // Create an axios instance with default headers
-// const axiosInstance = axios.create({
-//   baseURL: "http://localhost:4444/api/v1/",
-//   headers: {
-//     "Content-Type": "application/json",
-//   },
-// });
-
-// const getAccessToken = () => {
-//   return document.cookie
-//     .split(";")
-//     .find((row) => row.startsWith("accessToken="))
-//     .split("=")[1];
-// };
-
-// const isAccessTokenExpired = (accessToken) => {
-//   const decodedToken = jwt.decode(accessToken);
-//   return decodedToken.exp < Date.now() / 1000 || null;
-// };
-
-// // Add an interceptor to automatically refresh access token
-// axiosInstance.interceptors.request.use(
-//   async (config) => {
-//     alert("hello");
-//     try {
-//       const accessToken = document.cookie.includes("accessToken")
-//         ? getAccessToken()
-//         : null;
-
-//       if (accessToken && !isAccessTokenExpired(accessToken)) {
-//         // Add access token to request headers
-//         config.headers.Authorization = `Bearer ${accessToken}`;
-//       } else {
-//         // Refresh access token using refresh token
-//         const response = await axios.post("/users/refresh");
-//         if (response.data.success) {
-//           // Add new access token to request headers
-//           config.headers.Authorization = `Bearer ${response.data.data.accessToken}`;
-//         } else {
-//           // Handle error
-//           console.error(response.data.message);
-//         }
-//       }
-//       return config;
-//     } catch (error) {
-//       console.log(error);
-//     }
-//   },
-//   (error) => {
-//     return Promise.reject(error);
-//   }
-// );
-
-// export default axiosInstance;

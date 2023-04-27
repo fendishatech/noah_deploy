@@ -76,12 +76,14 @@ const login = async (req, res) => {
     const secret = authenticator.generateSecret();
     const otp_code = authenticator.generate(secret);
 
-    //  store otp secret
     res.cookie("otp_secret", secret, {
-      // httpOnly: true,
-      maxAge: 2 * 60 * 1000,
-      // secure : true
+      httpOnly: true,
     });
+
+    req.session.otp_secret = secret;
+    console.log("Cookie must be set!");
+
+    res.setHeader("Access-Control-Allow-Credentials", "true");
 
     // send otp to user
     console.log(user.phone_no, otp_code, secret);
@@ -112,6 +114,10 @@ const otp = async (req, res) => {
   const phone_no = req.body.phone_no;
   const secret = req.cookies.otp_secret;
 
+  const session_secret = req.session.otp_secret;
+
+  console.log(`Otp secret set to session : ${session_secret}`);
+  console.log(`Otp secret set to cookie : ${secret}`);
   // check if phone no is valid
   const user = await User.findOne({
     where: {
@@ -120,10 +126,10 @@ const otp = async (req, res) => {
   });
 
   if (user) {
-    if (otp_code) {
-      // if (otp_code && secret) {
-      // const isValid = authenticator.verify({ token: otp_code, secret: secret });
-      const isValid = true;
+    // if (otp_code) {
+    if (otp_code && secret) {
+      const isValid = authenticator.verify({ token: otp_code, secret: secret });
+      // const isValid = true;
 
       if (isValid) {
         // user payload, generate tokens, store, set cookies

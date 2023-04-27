@@ -20,7 +20,10 @@ const Login = () => {
         phone_no: phoneNumber,
         password,
       });
+      console.log("Refreshing ?");
+      console.log({ res });
       if (res.success == true) {
+        console.log(res.payload);
         setErrors({});
         navigate(`/otp/`, { state: { phoneNo: res.payload.phone_no } });
       } else {
@@ -51,15 +54,11 @@ const Login = () => {
 
   const handlePasswordChange = (e) => {
     const value = e.target.value;
-    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{3,}$/;
     const newErrors = { ...errors };
     let newSuccess = "";
 
     if (value === "") {
       newErrors.password = "Password cannot be empty";
-    } else if (!regex.test(value)) {
-      newErrors.password =
-        "Password must include at least one number, one capital letter and one small letter";
     } else {
       delete newErrors.password;
       newSuccess = "Password Format is valid";
@@ -111,3 +110,9 @@ const Login = () => {
 };
 
 export default Login;
+
+// const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{3,}$/;
+// else if (!regex.test(value)) {
+//       newErrors.password =
+//         "Password must include at least one number, one capital letter and one small letter";
+//     }

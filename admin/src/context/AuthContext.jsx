@@ -7,18 +7,28 @@ const UserAuthContext = createContext();
 
 // SET PROVIDER COMPONENT
 const UserAuthContextProvider = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState(false);
+  const [currentUser, setCurrentUser] = useState({});
 
   const login = async ({ phone_no, password }) => {
     try {
-      // const res = await axiosInstance.post("/users/login", {
-      //   phone_no,
-      //   password,
-      // });
-      const res = await axios.post("http://localhost:4444/api/v1/users/login", {
-        phone_no,
-        password,
-      });
+      try {
+        const res = await axiosInstance.post("/users/login", {
+          phone_no,
+          password,
+        });
+      } catch (error) {
+        console.log(error.message);
+      }
+      const res = await axios.post(
+        "http://localhost:4444/api/v1/users/login",
+        {
+          phone_no,
+          password,
+        },
+        {
+          credentials: "include",
+        }
+      );
       // set current user in local storage
       return res.data;
     } catch (error) {

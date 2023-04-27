@@ -1,10 +1,10 @@
 require("dotenv").config();
 const express = require("express");
 const cookieParser = require("cookie-parser");
+const session = require("express-session");
 const helmet = require("helmet");
-// const csrf = require("csurf");
 const cors = require("cors");
-const rateLimit = require("express-rate-limit");
+// const csrf = require("csurf");
 
 const routes = require("./src/routes/");
 // DEV
@@ -14,17 +14,33 @@ const migrate_tables = require("./src/helpers/db_sync_models");
 const app = express();
 
 // MIDDLEWAREs
-app.use(helmet());
-app.use(cors());
-app.use(express.json());
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: true },
+  })
+);
 app.use(cookieParser());
+app.use(helmet());
+app.use(
+  cors({
+    origins: ["http://localhost:5173/"],
+    credentials: true,
+  })
+);
+app.use(express.json());
 // app.use(csrf({ cookie: true }));
 
 // API ROUTES
 app.use("/api/", routes);
-
-app.use(cookieParser());
-
+app.use("/cookies", (req, res) => {
+  res.json({
+    cookies: req.cookies,
+    secret: req.cookies.otp_secret,
+  });
+});
 // DOC ROUTES
 // app.use("/api-docs", swaggerUi.serve, swaggerMiddleware);
 
