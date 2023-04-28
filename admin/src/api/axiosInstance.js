@@ -14,7 +14,7 @@ const axiosInstance = axios.create({
   headers: {
     "Content-Type": CONTENT_TYPE,
   },
-  credentials: "include",
+  // withCredentials: true,
 });
 
 const getAccessToken = () => {

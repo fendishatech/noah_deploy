@@ -27,7 +27,8 @@ const Login = () => {
         alert("There was an error logging in to system");
       }
     } catch (error) {
-      setErrors(error.response.data);
+      setErrors(error.message);
+      console.log(error.message);
       setSuccess("");
     }
   };
@@ -91,7 +92,7 @@ const Login = () => {
           />
           <button
             type="submit"
-            className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             disabled={
               Object.keys(errors).length > 0 ||
               phoneNumber === "" ||
