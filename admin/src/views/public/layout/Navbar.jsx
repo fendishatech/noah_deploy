@@ -28,7 +28,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-gray-200 px-4 py-3 flex items-center justify-between">
+    <nav className="bg-green-50 px-4 py-3 flex items-center shadow-lg justify-between">
       <button
         className="text-gray-800 focus:outline-none"
         onClick={handleSidebarToggle}
