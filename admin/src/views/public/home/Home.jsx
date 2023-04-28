@@ -3,6 +3,8 @@ import Cookies from "js-cookie";
 import Clients from "./clients";
 import Members from "./members";
 import Loan from "./loan";
+import Users from "./users";
+import Savings from "./savings";
 
 const ACCESS_TOKEN_COOKIE_NAME = "accessToken";
 const Home = () => {
@@ -15,6 +17,8 @@ const Home = () => {
       <Clients />
       <Members />
       <Loan />
+      <Savings />
+      <Users />
     </div>
   );
 };
