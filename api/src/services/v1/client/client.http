@@ -1,0 +1,37 @@
+@BASE_URL = http://localhost:4444/api/v1
+
+# Create a new client
+###
+POST {{BASE_URL}}/clients
+Content-Type: application/json
+
+{
+  "first_name": "John",
+  "father_name": "Doe",
+  "phone_no": "123456789"
+}
+
+###
+# Retrieve all clients
+GET {{BASE_URL}}/clients
+
+# Retrieve a single client by id
+###
+GET {{BASE_URL}}/clients/1
+
+# Update a client by id
+###
+PUT {{BASE_URL}}/clients/1
+Content-Type: application/json
+
+{
+  "father_name": "Snow"
+}
+
+# Delete a client by id
+###
+DELETE {{BASE_URL}}/clients/3
+
+###
+# Search for clients by first name, father name, or phone number
+GET {{BASE_URL}}/clients?q={s}

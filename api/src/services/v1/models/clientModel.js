@@ -14,10 +14,6 @@ const User = db.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    last_name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
     phone_no: {
       type: DataTypes.STRING,
       allowNull: false,
