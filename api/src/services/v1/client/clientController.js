@@ -28,37 +28,72 @@ const createClient = async (req, res) => {
 
 // Retrieve all clients from the database.
 const findClients = async (req, res) => {
-  const first_name = req.query.first_name;
-  const father_name = req.query.father_name;
-  const phone_no = req.query.phone_no;
-  var condition = null;
+  const {
+    first_name,
+    father_name,
+    phone_no,
+    email,
+    page = 1,
+    pageSize = 10,
+  } = req.query;
 
-  if (first_name || father_name || phone_no) {
-    condition = {};
-    if (first_name) {
-      condition.first_name = { [Op.like]: `%${first_name}%` };
-    }
-    if (father_name) {
-      condition.father_name = { [Op.like]: `%${father_name}%` };
-    }
-    if (phone_no) {
-      condition.phone_no = { [Op.like]: `%${phone_no}%` };
-    }
-  }
+  const offset = (page - 1) * pageSize;
+  const limit = parseInt(pageSize);
 
   try {
-    // Find all clients
-    const clients = await Client.findAll({
-      where: condition,
-      attributes: attributes,
+    const { count, rows } = await Client.findAndCountAll({
+      where: {
+        ...(first_name && { first_name }),
+        ...(father_name && { father_name }),
+        ...(phone_no && { phone_no }),
+      },
+      offset,
+      limit,
     });
-    res.send(clients);
-  } catch (err) {
-    res.status(500).send({
-      message: err.message || "Some error occurred while retrieving clients.",
+
+    res.status(200).json({
+      totalItems: count,
+      clients: rows,
+      totalPages: Math.ceil(count / pageSize),
+      currentPage: parseInt(page),
     });
+  } catch (error) {
+    res.status(500).json({ message: "Error retrieving clients", error });
   }
 };
+
+// const findClients = async (req, res) => {
+//   const first_name = req.query.first_name;
+//   const father_name = req.query.father_name;
+//   const phone_no = req.query.phone_no;
+//   var condition = null;
+
+//   if (first_name || father_name || phone_no) {
+//     condition = {};
+//     if (first_name) {
+//       condition.first_name = { [Op.like]: `%${first_name}%` };
+//     }
+//     if (father_name) {
+//       condition.father_name = { [Op.like]: `%${father_name}%` };
+//     }
+//     if (phone_no) {
+//       condition.phone_no = { [Op.like]: `%${phone_no}%` };
+//     }
+//   }
+
+//   try {
+//     // Find all clients
+//     const clients = await Client.findAll({
+//       where: condition,
+//       attributes: attributes,
+//     });
+//     res.send(clients);
+//   } catch (err) {
+//     res.status(500).send({
+//       message: err.message || "Some error occurred while retrieving clients.",
+//     });
+//   }
+// };
 
 // Find a single client with an id
 const findClient = async (req, res) => {
