@@ -16,8 +16,8 @@ Content-Type: application/json
 GET {{BASE_URL}}/clients
 
 ###
-# search
-GET {{BASE_URL}}/clients?father_name=snow
+# search and filter
+GET {{BASE_URL}}/clients?query=d
 
 # Retrieve a single client by id
 ###
@@ -29,7 +29,7 @@ PUT {{BASE_URL}}/clients/1
 Content-Type: application/json
 
 {
-  "first_name":"john",
+  "first_name":"John",
   "father_name": "Snow",
   "phone_no":"0911121314"
 }
@@ -37,7 +37,3 @@ Content-Type: application/json
 # Delete a client by id
 ###
 DELETE {{BASE_URL}}/clients/3
-
-###
-# Search for clients by first name, father name, or phone number
-GET {{BASE_URL}}/clients?q={s}

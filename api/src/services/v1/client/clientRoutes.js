@@ -13,8 +13,8 @@ router.post(
   clientController.createClient
 );
 router.get("/clients/:id", clientController.findClient);
-// router.get("/clients/", clientController.searchClient);
-router.get("/clients/", clientController.findClients);
+router.get("/clients/", clientController.searchClients);
+router.get("/clients/:id", clientController.findClients);
 router.put("/clients/:id", inputValidation, clientController.updateClient);
 router.delete("/clients/:id", clientController.deleteClient);
 

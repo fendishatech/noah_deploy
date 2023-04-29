@@ -1,6 +1,8 @@
+const { Op } = require("sequelize");
 const Client = require("../models/clientModel");
+const paginate = require("../../../helpers/paginate");
 
-const attributes = ["id", "first_name", "father_name", "phone_no"];
+const attributes = ["id", "first_name", "father_name"];
 
 // Create a new client
 const createClient = async (req, res) => {
@@ -26,19 +28,41 @@ const createClient = async (req, res) => {
   }
 };
 
-// Retrieve all clients from the database.
+// Find all clients
 const findClients = async (req, res) => {
+  const { page = 1, pageSize = 10 } = req.query;
+  const { offset, limit } = paginate(page, pageSize);
+
+  try {
+    const { count, rows } = await Client.findAndCountAll({
+      attributes: attributes,
+      offset,
+      limit,
+    });
+
+    res.status(200).json({
+      success: true,
+      totalItems: count,
+      clients: rows,
+      totalPages: Math.ceil(count / pageSize),
+      currentPage: parseInt(page),
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ success: false, message: "Error retrieving clients", error });
+  }
+};
+
+const filterClients = async (req, res) => {
   const {
     first_name,
     father_name,
     phone_no,
-    email,
     page = 1,
     pageSize = 10,
   } = req.query;
-
-  const offset = (page - 1) * pageSize;
-  const limit = parseInt(pageSize);
+  const { offset, limit } = paginate(page, pageSize);
 
   try {
     const { count, rows } = await Client.findAndCountAll({
@@ -46,6 +70,35 @@ const findClients = async (req, res) => {
         ...(first_name && { first_name }),
         ...(father_name && { father_name }),
         ...(phone_no && { phone_no }),
+      },
+      attributes: attributes,
+      offset,
+      limit,
+    });
+
+    res.status(200).json({
+      totalItems: count,
+      clients: rows,
+      totalPages: Math.ceil(count / pageSize),
+      currentPage: parseInt(page),
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Error searching clients", error });
+  }
+};
+
+const searchClients = async (req, res) => {
+  const { query, page = 1, pageSize = 10 } = req.query;
+  const { offset, limit } = paginate(page, pageSize);
+
+  try {
+    const { count, rows } = await Client.findAndCountAll({
+      where: {
+        [Op.or]: [
+          { first_name: { [Op.like]: `%${query}%` } },
+          { father_name: { [Op.like]: `%${query}%` } },
+          { phone_no: { [Op.like]: `%${query}%` } },
+        ],
       },
       offset,
       limit,
@@ -58,44 +111,10 @@ const findClients = async (req, res) => {
       currentPage: parseInt(page),
     });
   } catch (error) {
-    res.status(500).json({ message: "Error retrieving clients", error });
+    res.status(500).json({ message: "Error searching clients", error });
   }
 };
 
-// const findClients = async (req, res) => {
-//   const first_name = req.query.first_name;
-//   const father_name = req.query.father_name;
-//   const phone_no = req.query.phone_no;
-//   var condition = null;
-
-//   if (first_name || father_name || phone_no) {
-//     condition = {};
-//     if (first_name) {
-//       condition.first_name = { [Op.like]: `%${first_name}%` };
-//     }
-//     if (father_name) {
-//       condition.father_name = { [Op.like]: `%${father_name}%` };
-//     }
-//     if (phone_no) {
-//       condition.phone_no = { [Op.like]: `%${phone_no}%` };
-//     }
-//   }
-
-//   try {
-//     // Find all clients
-//     const clients = await Client.findAll({
-//       where: condition,
-//       attributes: attributes,
-//     });
-//     res.send(clients);
-//   } catch (err) {
-//     res.status(500).send({
-//       message: err.message || "Some error occurred while retrieving clients.",
-//     });
-//   }
-// };
-
-// Find a single client with an id
 const findClient = async (req, res) => {
   const id = req.params.id;
 
@@ -167,6 +186,7 @@ const deleteClient = async (req, res) => {
 module.exports = {
   createClient,
   findClients,
+  searchClients,
   findClient,
   updateClient,
   deleteClient,
