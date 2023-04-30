@@ -1,0 +1,248 @@
+openapi: 3.0.0
+info:
+  title: Client API
+  version: 1.0.0
+paths:
+  /clients:
+    get:
+ summary: Retrieve a list of clients
+      parameters:
+        in: query
+          name: page
+          schema:
+            type: integer
+            minimum: 1
+          description: Page number to retrieve
+        - in: query
+          name: pageSize
+          schema:
+            type: integer
+            minimum: 1
+          description: Number of items per page
+        - in: query
+          name: first_name
+          schema:
+            type: string
+          description: Filter by first name
+        - in: query
+          name: father_name
+          schema:
+            type: string
+          description: Filter by father name
+        - in: query
+          name: phone_no
+          schema:
+            type: string
+          description: Filter by phone number
+      responses:
+        '200':
+          description: A list of clients
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  totalItems:
+                    type: integer
+                    description: Total number of clients
+                  clients:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Client'
+                  totalPages:
+                    type: integer
+                    description: Total number of pages
+                  currentPage:
+                    type: integer
+                    description: Current page number
+    post:
+      summary: Create a new client
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClientInput'
+      responses:
+        '200':
+          description: The created client
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Client'
+  /clients/{id}:
+    get:
+      summary: Retrieve a client by ID
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+            minimum: 1
+          required: true
+          description: ID of the client to retrieve
+      responses:
+        '200':
+          description: The requested client
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Client'
+    put:
+      summary: Update a client by ID
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+            minimum: 1
+          required: true
+          description: ID of the client to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClientInput'
+      responses:
+        '200':
+          description: The updated client
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Client'
+    delete:
+      summary: Delete a client by ID
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+            minimum: 1
+          required: true
+          description: ID of the client to delete
+      responses:
+        '200':
+          description: The deleted client
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Client'
+components:
+  schemas:
+    Client:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the client
+        first_name:
+          type: string
+          description: First name of the client
+        father_name:
+          type: string
+          description: Father name of the client
+        phone_no:
+          type: string
+          description: Phone number of the client
+      required:
+        - id
+        - first_name
+        - father_name
+        - phone_no
+    ClientInput:
+      type: object
+      properties:
+        first_name:
+          type: string
+          description: First name of the client
+        father_name:
+          type: string
+          description: Father name of the client
+        phone_no:
+          type: string
+          description: Phone number of the client
+      required:
+        - first_name
+        - father_name
+        - phone_no
+ /clients/search:
+    get:
+ summary: Search for clients query
+      parameters:
+        - in: query
+          name: query
+          schema:
+            type:
+          required: true          description: Query string to for clients
+        -: query
+          name:
+          schema:
+            type: integer
+ minimum: 1
+          description: Page number to retrieve
+        - in: query
+          name: pageSize
+          schema:
+            type: integer
+            minimum: 1
+          description: Number of items per page
+      responses:
+       200':
+          description: A list of clients matching the query
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  totalItems:
+                    type: integer
+                    description: Total number of clients matching the query
+                  clients:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Client'
+                  totalPages:
+                    type: integer
+                    description: Total number of pages
+                  currentPage:
+                    type: integer
+                    description: Current page number
+  components:
+    schemas:
+      Client:
+        type: object
+        properties:
+          id:
+            type: integer
+            description: Unique identifier for the client
+          first_name:
+            type: string
+            description: First name of the client
+          father_name:
+            type: string
+            description: Father name of the client
+          phone_no:
+            type: string
+            description: Phone number of the client
+        required:
+          - id
+          - first_name
+          - father_name
+          - phone_no
+      ClientInput:
+        type: object
+        properties:
+          first_name:
+            type: string
+            description: First name of the client
+          father_name:
+            type: string
+            description: Father name of the client
+          phone_no:
+            type: string
+            description: Phone number of the client
+        required:
+          - first_name
+          - father_name
+          - phone_no
