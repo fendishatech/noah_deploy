@@ -1,6 +1,6 @@
 const express = require("express");
 const clientController = require("./clientController");
-const { verifyToken } = require("../../../helpers/verifyToken");
+const { verifyToken } = require("../../../helpers/authTokens");
 const { inputValidation } = require("./clientValidator");
 
 const router = express.Router();
@@ -12,9 +12,9 @@ router.post(
   inputValidation,
   clientController.createClient
 );
+router.get("/clients/", clientController.findClients);
+router.get("/clients/search", clientController.searchClients);
 router.get("/clients/:id", clientController.findClient);
-router.get("/clients/", clientController.searchClients);
-router.get("/clients/:id", clientController.findClients);
 router.put("/clients/:id", inputValidation, clientController.updateClient);
 router.delete("/clients/:id", clientController.deleteClient);
 

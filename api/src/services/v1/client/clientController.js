@@ -2,7 +2,7 @@ const { Op } = require("sequelize");
 const Client = require("../models/clientModel");
 const paginate = require("../../../helpers/paginate");
 
-const attributes = ["id", "first_name", "father_name"];
+const attributes = ["id", "first_name", "father_name", "phone_no", "createdAt"];
 
 // Create a new client
 const createClient = async (req, res) => {
