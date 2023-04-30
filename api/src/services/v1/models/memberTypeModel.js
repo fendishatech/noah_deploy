@@ -1,7 +1,6 @@
-const Sequelize = require("sequelize");
 const db = require("../../../helpers/database");
 const Member = require("./memberModel");
-const { DataTypes } = Sequelize;
+const { DataTypes } = require("sequelize");
 
 const MemberType = db.define(
   "member_types",

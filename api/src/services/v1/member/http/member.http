@@ -6,17 +6,17 @@ POST {{BASE_URL}}/members
 Content-Type: application/json
 
 {
-  "first_name": "John",
+  "first_name": "Jean",
   "father_name": "Doe",
   "last_name": "Smith",
-  "title": "Mr",
-  "gender": "male",
+  "title": "Mrs",
+  "gender": "female",
   "dob": "1990-01-01",
-  "martial_status": "married",
+  "martial_status": "single",
   "family_no": 4,
   "family_males": 2,
   "family_females": 2,
-  "phone_no": "0913974307",
+  "phone_no": "0913974308",
   "email": "john.doe@example.com",
   "will_list": "john doe, jean doe",
   "password": "12345678",

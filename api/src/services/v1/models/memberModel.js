@@ -1,8 +1,7 @@
-const Sequelize = require("sequelize");
 const db = require("../../../helpers/database");
+const { DataTypes } = require("sequelize");
 const MemberType = require("./memberTypeModel");
-
-const { DataTypes } = Sequelize;
+const MemberEdu = require("./memberEduModel");
 
 const Member = db.define(
   "members",
@@ -78,5 +77,12 @@ MemberType.hasOne(Member, {
   },
 });
 Member.belongsTo(MemberType);
+
+MemberEdu.hasOne(Member, {
+  foreignKey: {
+    name: "memberEduId",
+  },
+});
+Member.belongsTo(MemberEdu);
 
 module.exports = Member;

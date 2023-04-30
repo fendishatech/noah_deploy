@@ -1,11 +1,14 @@
-const Sequelize = require("sequelize");
 const db = require("../../../helpers/database");
+const { DataTypes } = require("sequelize");
 
-const { DataTypes } = Sequelize;
-
-const User = db.define(
+const Client = db.define(
   "clients",
   {
+    // uuid: {
+    // type: Sequelize.UUID,
+    // defaultValue: Sequelize.UUIDV1,
+    // primaryKey: true
+    // },
     first_name: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -25,4 +28,4 @@ const User = db.define(
   }
 );
 
-module.exports = User;
+module.exports = Client;

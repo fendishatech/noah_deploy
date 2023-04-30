@@ -1,6 +1,5 @@
-const Sequelize = require("sequelize");
 const db = require("../../../helpers/database");
-const { DataTypes } = Sequelize;
+const { DataTypes } = require("sequelize");
 
 const SubCity = db.define(
   "sub_cities",

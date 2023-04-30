@@ -1,8 +1,8 @@
 const db = require("../../../helpers/database");
 const { DataTypes } = require("sequelize");
 
-const User = db.define(
-  "users",
+const SpecialSaving = db.define(
+  "spacial_savings",
   {
     first_name: {
       type: DataTypes.STRING,
@@ -46,4 +46,4 @@ const User = db.define(
   }
 );
 
-module.exports = User;
+module.exports = SpecialSaving;

@@ -1,20 +1,23 @@
 const db = require("../../../helpers/database");
 const { DataTypes } = require("sequelize");
 
-const User = db.define(
-  "clients",
+const Child = db.define(
+  "children",
   {
-    first_name: {
+    name: {
       type: DataTypes.STRING,
-      allowNull: false,
+      unique: true,
     },
     father_name: {
       type: DataTypes.STRING,
-      allowNull: false,
+      unique: true,
     },
-    phone_no: {
+    mother_name: {
       type: DataTypes.STRING,
-      allowNull: false,
+      unique: true,
+    },
+    name: {
+      type: DataTypes.STRING,
       unique: true,
     },
   },
@@ -23,4 +26,4 @@ const User = db.define(
   }
 );
 
-module.exports = User;
+module.exports = Child;
