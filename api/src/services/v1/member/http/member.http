@@ -1,0 +1,62 @@
+@BASE_URL = http://localhost:4444/api/v1
+
+# Create a new member
+###
+POST {{BASE_URL}}/members
+Content-Type: application/json
+
+{
+  "first_name": "John",
+  "father_name": "Doe",
+  "last_name": "Smith",
+  "title": "Mr",
+  "gender": "male",
+  "dob": "1990-01-01",
+  "martial_status": "married",
+  "family_no": 4,
+  "family_males": 2,
+  "family_females": 2,
+  "phone_no": "0913974307",
+  "email": "john.doe@example.com",
+  "will_list": "john doe, jean doe",
+  "password": "12345678",
+  "memberTypeId" : 1
+}
+
+###
+# Retrieve all members
+GET {{BASE_URL}}/members
+
+###
+# Search and filter
+GET {{BASE_URL}}/members/search?query=j
+
+# Retrieve a single member by id
+###
+GET {{BASE_URL}}/members/1
+
+# Update a member by id
+###
+PUT {{BASE_URL}}/members/1
+Content-Type: application/json
+
+{
+  "first_name": "John",
+  "father_name": "Snow",
+  "last_name": "Smith",
+  "title": "Mr",
+  "gender": "male",
+  "dob": "1990-01-01",
+  "martial_status": "married",
+  "family_no": 4,
+  "family_males": 2,
+  "family_females": 2,
+  "phone_no": "0913974307",
+  "email": "john.doe@example.com",
+  "will_list": "john doe, jean doe",
+  "password": "12345678"
+}
+
+# Delete a member by id
+###
+DELETE {{BASE_URL}}/members/1

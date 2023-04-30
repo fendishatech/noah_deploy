@@ -1,0 +1,37 @@
+@BASE_URL = http://localhost:4444/api/v1
+
+# Create a new sub city
+###
+POST {{BASE_URL}}/sub_cities
+Content-Type: application/json
+
+{
+  "name": "Arada",
+  "woreda": 10
+}
+
+###
+# Retrieve all sub cities
+GET {{BASE_URL}}/sub_cities
+
+###
+# Search and filter
+GET {{BASE_URL}}/sub_cities/search?query=k
+
+# Retrieve a single sub city by id
+###
+GET {{BASE_URL}}/sub_cities/1
+
+# Update a sub city by id
+###
+PUT {{BASE_URL}}/sub_cities/1
+Content-Type: application/json
+
+{
+  "name": "Kolfe",
+  "woreda": "Kolfe Keraniyo"
+}
+
+# Delete a sub city by id
+###
+DELETE {{BASE_URL}}/sub_cities/3

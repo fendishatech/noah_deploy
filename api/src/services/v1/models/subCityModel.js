@@ -7,6 +7,7 @@ const SubCity = db.define(
   {
     name: {
       type: DataTypes.STRING,
+      unique: true,
     },
     woreda: {
       type: DataTypes.INTEGER,

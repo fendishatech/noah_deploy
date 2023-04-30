@@ -1,24 +1,25 @@
 const { Op } = require("sequelize");
-const SubCity = require("../models/SubCityModel");
-const paginate = require("../../../helpers/paginate");
+const SubCity = require("../../models/SubCityModel");
+const paginate = require("../../../../helpers/paginate");
 
 const attributes = ["id", "name", "woreda"];
 
 // Create a new SubCity
 const createSubCity = async (req, res) => {
   // Create a SubCity
-  const SubCity = {
+  const subCity = {
     name: req.body.name,
     woreda: req.body.woreda,
   };
-
+  console.log(subCity);
   try {
     // Save SubCity in the database
-    const data = await SubCity.create(SubCity);
+    const data = await SubCity.create(subCity);
     res.status(200).json({ success: true, payload: data });
   } catch (err) {
     res.status(500).json({
       success: false,
+      new: "new ",
       message:
         err ||
         err.errors[0].message ||
@@ -89,8 +90,10 @@ const searchSubCities = async (req, res) => {
   try {
     const { count, rows } = await SubCity.findAndCountAll({
       where: {
-        [Op.or]: [{ name: { [Op.like]: `%${query}%` } }],
-        [Op.or]: [{ woreda: { [Op.like]: `%${query}%` } }],
+        [Op.or]: [
+          { name: { [Op.like]: `%${query}%` } },
+          { woreda: { [Op.like]: `%${query}%` } },
+        ],
       },
       offset,
       limit,

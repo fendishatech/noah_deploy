@@ -1,6 +1,6 @@
 const { Op } = require("sequelize");
-const Member = require("../models/memberModel");
-const paginate = require("../../../helpers/paginate");
+const Member = require("../../models/memberModel");
+const paginate = require("../../../../helpers/paginate");
 
 const attributes = [
   "id",
@@ -12,11 +12,13 @@ const attributes = [
   "dob",
   "martial_status",
   "family_no",
-  "family_males_females",
+  "family_males",
+  "family_females",
   "phone_no",
   "email",
   "will_list",
   "password",
+  "memberTypeId",
 ];
 
 // Create a new member
@@ -31,11 +33,13 @@ const createMember = async (req, res) => {
     dob: req.body.dob,
     martial_status: req.body.martial_status,
     family_no: req.body.family_no,
-    family_males_females: req.body.family_males_females,
+    family_males: req.body.family_males,
+    family_females: req.body.family_females,
     phone_no: req.body.phone_no,
     email: req.body.email,
     will_list: req.body.will_list,
     password: req.body.password,
+    memberTypeId: req.body.memberTypeId,
   };
 
   try {
@@ -115,15 +119,19 @@ const searchMembers = async (req, res) => {
   try {
     const { count, rows } = await Member.findAndCountAll({
       where: {
-        [Op.or]: [{ first_name: { [Op.like]: `%${query}%` } }],
-        [Op.or]: [{ father_name: { [Op.like]: `%${query}%` } }],
-        [Op.or]: [{ last_name: { [Op.like]: `%${query}%` } }],
-        [Op.or]: [{ phone_no: { [Op.like]: `%${query}%` } }],
+        [Op.or]: [
+          {
+            first_name: { [Op.like]: `%${query}%` },
+          },
+          { father_name: { [Op.like]: `%${query}%` } },
+          { last_name: { [Op.like]: `%${query}%` } },
+          { phone_no: { [Op.like]: `%${query}%` } },
+        ],
       },
       offset,
       limit,
     });
-
+    console.log({ rows });
     res.status(200).json({
       success: true,
       totalItems: count,

@@ -1,6 +1,6 @@
 const { Op } = require("sequelize");
-const City = require("../models/cityModel");
-const paginate = require("../../../helpers/paginate");
+const City = require("../../models/cityModel");
+const paginate = require("../../../../helpers/paginate");
 
 const attributes = ["id", "name"];
 
@@ -37,7 +37,6 @@ const findCities = async (req, res) => {
       offset,
       limit,
     });
-
     res.status(200).json({
       success: true,
       totalItems: count,

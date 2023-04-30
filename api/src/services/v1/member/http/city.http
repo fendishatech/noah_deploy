@@ -1,0 +1,35 @@
+@BASE_URL = http://localhost:4444/api/v1
+
+# Create a new city
+###
+POST {{BASE_URL}}/cities
+Content-Type: application/json
+
+{
+  "name": "Addis Ababa"
+}
+
+###
+# Retrieve all cities
+GET {{BASE_URL}}/cities
+
+###
+# Search and filter
+GET {{BASE_URL}}/cities/search?query=z
+
+# Retrieve a single city by id
+###
+GET {{BASE_URL}}/cities/1
+
+# Update a city by id
+###
+PUT {{BASE_URL}}/cities/1
+Content-Type: application/json
+
+{
+  "name": "Addis Ababa"
+}
+
+# Delete a city by id
+###
+DELETE {{BASE_URL}}/cities/3

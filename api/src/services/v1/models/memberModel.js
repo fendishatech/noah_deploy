@@ -39,8 +39,12 @@ const Member = db.define(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    family_males_females: {
-      type: DataTypes.STRING,
+    family_males: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    family_females: {
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     phone_no: {
@@ -67,7 +71,12 @@ const Member = db.define(
   }
 );
 
-Member.hasOne(Member, { foreignKey: "memberTypeId" });
-MemberType.belongsTo(Member, { foreignKey: "memberTypeId" });
+MemberType.hasOne(Member, {
+  foreignKey: {
+    name: "memberTypeId",
+    allowNull: false,
+  },
+});
+Member.belongsTo(MemberType);
 
 module.exports = Member;

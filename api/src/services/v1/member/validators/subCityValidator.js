@@ -2,9 +2,8 @@ const Joi = require("joi");
 
 //  Input schema
 const schema = Joi.object({
-  first_name: Joi.string().trim().alphanum().min(3).max(30).required(),
-  father_name: Joi.string().trim().alphanum().min(3).max(30).required(),
-  phone_no: Joi.string().trim().required(),
+  name: Joi.string().trim().min(2).max(30).required(),
+  woreda: Joi.number().min(2).max(30).required(),
 });
 
 // Input schema validator

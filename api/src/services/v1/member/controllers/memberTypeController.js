@@ -1,6 +1,6 @@
 const { Op } = require("sequelize");
-const MemberType = require("../models/memberTypeModel");
-const paginate = require("../../../helpers/paginate");
+const MemberType = require("../../models/memberTypeModel");
+const paginate = require("../../../../helpers/paginate");
 
 const attributes = ["id", "name"];
 
