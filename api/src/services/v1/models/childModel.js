@@ -4,7 +4,7 @@ const { DataTypes } = require("sequelize");
 const Child = db.define(
   "children",
   {
-    name: {
+    first_name: {
       type: DataTypes.STRING,
       unique: true,
     },
@@ -16,8 +16,8 @@ const Child = db.define(
       type: DataTypes.STRING,
       unique: true,
     },
-    name: {
-      type: DataTypes.STRING,
+    payment: {
+      type: DataTypes.DOUBLE,
       unique: true,
     },
   },

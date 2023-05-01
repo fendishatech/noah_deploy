@@ -2,7 +2,7 @@ const db = require("../../../helpers/database");
 const { DataTypes } = require("sequelize");
 
 const City = require("./cityModel");
-const SubCity = require("./subCityModel");
+const SubCity = require("./SubCityModel");
 const Member = require("./memberModel");
 
 const MemberAddress = db.define(

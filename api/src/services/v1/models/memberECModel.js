@@ -1,8 +1,8 @@
 const db = require("../../../helpers/database");
 const { DataTypes } = require("sequelize");
 const City = require("./cityModel");
-const SubCity = require("./subCityModel");
-const Member = require("./memberModel");
+const SubCity = require("./SubCityModel");
+const Member = require("./MemberModel");
 
 const MemberEC = db.define(
   "emergency_contact",

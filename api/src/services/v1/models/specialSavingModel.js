@@ -4,8 +4,8 @@ const { DataTypes } = require("sequelize");
 const SpecialSaving = db.define(
   "spacial_savings",
   {
-    first_name: {
-      type: DataTypes.STRING,
+    amount: {
+      type: DataTypes.DOUBLE,
       allowNull: false,
     },
     father_name: {
