@@ -12,7 +12,7 @@ const MemberEC = require("../services/v1/models/memberECModel");
 const MemberAddress = require("../services/v1/models/memberAddressModel");
 const Child = require("../services/v1/models/childModel");
 const ChildAddress = require("../services/v1/models/childAddressModel");
-
+const Interest = require("../services/v1/models/common/interestModel");
 // DEV
 async function migrate_tables() {
   try {
@@ -33,6 +33,7 @@ async function migrate_tables() {
     await MemberLot.sync();
     await Child.sync();
     await ChildAddress.sync();
+    await Interest.sync();
     console.log("Table Migrated Successfully");
     return true;
   } catch (error) {
