@@ -10,6 +10,11 @@ const LoanPayment = db.define(
     amount: {
       type: DataTypes.DOUBLE,
     },
+    voucher_no: {
+      type: DataTypes.STRING,
+      unique: true,
+      comment: "unique identifier for for the loan transaction",
+    },
     acquired_interest: {
       type: DataTypes.DOUBLE,
       allowNull: false,

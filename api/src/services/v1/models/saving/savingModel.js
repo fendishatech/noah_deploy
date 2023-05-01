@@ -15,13 +15,16 @@ const Saving = db.define(
     },
     total_saving: {
       type: DataTypes.DOUBLE,
+      comment: "Total saving money with out interest",
     },
-    remaining_amount: {
+    outstanding_balance: {
       type: DataTypes.DOUBLE,
+      comment: "Current total saving amount including interest",
     },
   },
   {
     freezeTableName: true,
+    comment: "Saving account of a member",
   }
 );
 
