@@ -13,6 +13,10 @@ const MemberAddress = require("../services/v1/models/memberAddressModel");
 const Child = require("../services/v1/models/childModel");
 const ChildAddress = require("../services/v1/models/childAddressModel");
 const Interest = require("../services/v1/models/common/interestModel");
+const Loan = require("../services/v1/models/loan/loanModel");
+const LoanPayment = require("../services/v1/models/loan/loanPaymentModel");
+const LoanRequest = require("../services/v1/models/loan/loanRequestModel");
+const RegistrationFee = require("../services/v1/models/common/registrationFeeModel");
 // DEV
 async function migrate_tables() {
   try {
@@ -34,6 +38,10 @@ async function migrate_tables() {
     await Child.sync();
     await ChildAddress.sync();
     await Interest.sync();
+    await Loan.sync();
+    await LoanPayment.sync();
+    await LoanRequest.sync();
+    await RegistrationFee.sync();
     console.log("Table Migrated Successfully");
     return true;
   } catch (error) {

@@ -3,6 +3,7 @@ const express = require("express");
 const cookieParser = require("cookie-parser");
 const helmet = require("helmet");
 const cors = require("cors");
+require("./src/helpers/loan.cron");
 // const csrf = require("csurf");
 
 const routes = require("./src/routes/");

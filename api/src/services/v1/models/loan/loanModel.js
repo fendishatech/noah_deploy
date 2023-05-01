@@ -1,5 +1,7 @@
 const db = require("../../../../helpers/database");
 const { DataTypes } = require("sequelize");
+const Member = require("../memberModel");
+const Interest = require("../common/interestModel");
 
 const Loan = db.define(
   "loans",
@@ -54,18 +56,18 @@ Loan.belongsTo(Member, {
   foreignKey: { name: "memberId", allowNull: false },
 });
 
-Loan.hasMany(Loan, {
+Interest.hasMany(Interest, {
   foreignKey: {
-    name: "loanId",
+    name: "interestId",
     allowNull: false,
-    comment: "The basic loan rate",
+    comment: "The basic interest rate",
   },
 });
-Loan.belongsTo(Loan, {
+Interest.belongsTo(Interest, {
   foreignKey: {
-    name: "loanId",
+    name: "interestId",
     allowNull: false,
-    comment: "The basic loan rate",
+    comment: "The basic interest rate",
   },
 });
 
