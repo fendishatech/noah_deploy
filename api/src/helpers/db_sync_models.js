@@ -20,6 +20,8 @@ const RegistrationFee = require("../services/v1/models/common/registrationFeeMod
 const Saving = require("../services/v1/models/saving/savingModel");
 const SavingDeposit = require("../services/v1/models/saving/savingDepositModel");
 const Withdrawal = require("../services/v1/models/saving/withdrawalModel");
+const SpecialSaving = require("../services/v1/models/special_saving/specialSavingModel");
+const SpecialSavingDeposit = require("../services/v1/models/special_saving/specialSavingDepositModel");
 // DEV
 async function migrate_tables() {
   try {
@@ -48,6 +50,8 @@ async function migrate_tables() {
     await Saving.sync();
     await Withdrawal.sync();
     await SavingDeposit.sync();
+    await SpecialSaving.sync();
+    await SpecialSavingDeposit.sync();
     console.log("Table Migrated Successfully");
     return true;
   } catch (error) {
