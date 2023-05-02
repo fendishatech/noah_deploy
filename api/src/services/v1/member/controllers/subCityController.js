@@ -1,5 +1,5 @@
 const { Op } = require("sequelize");
-const SubCity = require("../../models/SubCityModel");
+const SubCity = require("../../models/subCityModel");
 const paginate = require("../../../../helpers/paginate");
 
 const attributes = ["id", "name", "woreda"];

@@ -93,11 +93,11 @@ const Login = () => {
           <button
             type="submit"
             className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            disabled={
-              Object.keys(errors).length > 0 ||
-              phoneNumber === "" ||
-              password === ""
-            }
+            // disabled={
+            //   Object.keys(errors).length > 0 ||
+            //   phoneNumber === "" ||
+            //   password === ""
+            // }
           >
             Login
           </button>

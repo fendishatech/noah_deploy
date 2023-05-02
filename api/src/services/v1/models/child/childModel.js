@@ -1,4 +1,4 @@
-const db = require("../../../helpers/database");
+const db = require("../../../../helpers/database");
 const { DataTypes } = require("sequelize");
 
 const Child = db.define(
@@ -16,9 +16,11 @@ const Child = db.define(
       type: DataTypes.STRING,
       unique: true,
     },
-    payment: {
+    dob: {
+      type: DataTypes.DATE,
+    },
+    total_saving: {
       type: DataTypes.DOUBLE,
-      unique: true,
     },
   },
   {
